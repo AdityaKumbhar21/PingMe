@@ -18,7 +18,6 @@ export const signup = async (req, res)=>{
         const user = await userModel.findOne({email});
          
         if(!user){
-            console.log("inside if");
             
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
