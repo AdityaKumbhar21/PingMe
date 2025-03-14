@@ -1,0 +1,1 @@
+export const THEMES = ["light" , "dark" , "retro", "bumblebee", "valentine", "synthwave", "nord", "abyss"]
