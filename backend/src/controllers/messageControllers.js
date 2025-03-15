@@ -18,12 +18,12 @@ export const getUsers = async (req, res)=>{
 
 export const getMessages = async(req, res) =>{
     try {
-        const {id:recieverId} = req.params;
+        const {id:receiverId} = req.params;
         const senderId =  req.user._id
         const messages = await messageModel.find({
             $or:[
-                {senderId, recieverId},
-                {senderId: recieverId, recieverId:senderId}
+                {senderId, receiverId},
+                {senderId: receiverId, receiverId:senderId}
             ]
         });
 
@@ -38,19 +38,19 @@ export const sendMessage = async (req, res)=>{
     try {
         const {image, text} = req.body;
         const senderId = req.user._id;
-        const {id:receiverId} = req.params.id;
-
+        const {id} = req.params;
+        const receiverId = id;
         let imageUrl;
         if(image){
             const uploadRes = await cloudinary.uploader.upload(image);
             imageUrl = uploadRes.secure_url;
         }
 
-        const message = await new messageModel.create({
+        const message = new messageModel({
             senderId,
             receiverId,
             text,
-            image
+            image: imageUrl
         });
 
         await message.save();
