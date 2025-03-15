@@ -1,6 +1,8 @@
+import { getReceiverId } from "../lib/socket.js";
 import { messageModel } from "../models/message-model.js";
 import userModel from "../models/user-model.js";
 import cloudinary from "cloudinary";
+import { io } from "../lib/socket.js";
 
 export const getUsers = async (req, res)=>{
     try {
@@ -18,7 +20,8 @@ export const getUsers = async (req, res)=>{
 
 export const getMessages = async(req, res) =>{
     try {
-        const {id:receiverId} = req.params;
+        const {id} = req.params;
+        const receiverId = id;
         const senderId =  req.user._id
         const messages = await messageModel.find({
             $or:[
@@ -54,9 +57,14 @@ export const sendMessage = async (req, res)=>{
         });
 
         await message.save();
-        res.status(200).json(message);
 
-        // todo: real-time functionality using socket.io
+        const receiverSocketId = getReceiverId(receiverId);
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage", message);
+        }
+
+        res.status(200).json(message);
+       
 
     } catch (error) {
         console.log("Message Route (Sendmessages) error " + error);
