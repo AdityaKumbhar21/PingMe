@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import {io}  from "socket.io-client";
 
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000" : "/";
 
 export const useAuthStore = create((set, get) =>({
     isSigningUp: false,
@@ -17,7 +17,6 @@ export const useAuthStore = create((set, get) =>({
     checkAuth : async ()=>{
         try {
             const res = await axiosInstance.get('/auth/check');
-            console.log(res.data);
             set({authUser:res.data});
             get().connectSocket();
         } catch (error) {
