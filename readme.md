@@ -1,6 +1,6 @@
 # PingMe - Real-time Chat Application
 
-![PingMe](https://pingme-kq1d.onrender.com)
+[PingMe](https://pingme-kq1d.onrender.com)
 
 ## Overview
 
